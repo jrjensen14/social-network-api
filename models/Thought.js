@@ -21,12 +21,12 @@ const thoughtSchema = new Schema(
     },
     // reactions: [reactionSchema]
   },
-  // {
-  //   toJSON: {
-  //     getters: true
-  //   },
-  //   id: false
-  // }
+  {
+    toJSON: {
+      getters: true
+    },
+    id: false
+  }
 );
 
 // thoughtSchema.virtual('reactionCount').get(function() {

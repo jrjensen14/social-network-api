@@ -4,7 +4,7 @@ const userContoller = {
   // GET all users
   getUsers(req, res) {
     User.find({})
-      // .select('-__v')
+      .select('-__v')
       .then((dbUserData) => {
         res.json(dbUserData);
       })
@@ -16,9 +16,9 @@ const userContoller = {
   // get single user by id
   getSingleUser({params}, res) {
     User.findOne({ _id: params.id })
-      // .select('-__v')
-      // .populate('friends')
-      // .populate('thought')
+      .select('-__v')
+      .populate('friends')
+      .populate('thought')
       .then((dbUserData) => {
         if (!dbUserData) {
           return res.status(404).json({ message: 'no user with that id' });

@@ -55,7 +55,7 @@ const thoughtController = {
       if (!dbUserData) {
         return res.status(404).json({ message: 'no thought found with this id/ thouhgt created' });
       }
-      res.json(dbUserData);
+      res.json({ message: 'thought deleted'});
     })
     .catch((err) => {
       console.log(err);
@@ -63,3 +63,5 @@ const thoughtController = {
     });
   },
 }
+
+module.exports = thoughtController;
