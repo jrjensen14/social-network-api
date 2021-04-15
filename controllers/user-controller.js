@@ -38,9 +38,14 @@ const userContoller = {
       });
   },
   // update user
-  updateUser({params, body }, res) {
+  updateUser({params}, res) {
     User.findOneAndUpdate(
-      { _id: params.id }, body, {new: true})
+      { _id: params.userId }, 
+      { $set: body },
+      {
+        runValidators: true, 
+        new: true
+      })
       .then((dbUserData) => {
         if (!dbUserData) {
           return res.status(404).json({ message: 'no user with that id' });
