@@ -33,6 +33,9 @@ https://github.com/jrjensen14/social-network-api.git
 ---
 
 ## Usage
+* Walk Through Video:
+https://drive.google.com/file/d/1XHmQWXbs69uQ0uG9_pOyaj7L0oqVolfO/view
+
 ![Screenshot of Get all users](screenshots/social-network-screenshot-1.png)
 ![Screenshot of Creat a user](screenshots/social-network-screenshot-2.png)
 
