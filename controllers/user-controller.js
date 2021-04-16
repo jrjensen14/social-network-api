@@ -3,7 +3,7 @@ const { User, Thought } = require('../models');
 const userContoller = {
   // GET all users
   getUsers(req, res) {
-    User.find({})
+    User.find()
       .select('-__v')
       .then((dbUserData) => {
         res.json(dbUserData);
@@ -18,16 +18,20 @@ const userContoller = {
     User.findOne({ _id: params.id })
       .select('-__v')
       .populate('friends')
-      .populate('thought')
+      .populate('thoughts')
       .then((dbUserData) => {
         if (!dbUserData) {
-          return res.status(404).json({ message: 'no user with that id' });
+          return res.status(404).json({ message: 'No user with this id!' });
         }
         res.json(dbUserData);
       })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
   },
-  // create new user
-  createUser({body}, res) {
+    // create new user
+  createUser({ body }, res) {
     User.create(body)
       .then((dbUserData) => {
         res.json(dbUserData);
@@ -38,17 +42,18 @@ const userContoller = {
       });
   },
   // update user
-  updateUser({params}, res) {
+  updateUser({params, body }, res) {
     User.findOneAndUpdate(
-      { _id: params.userId }, 
-      { $set: body },
+      { _id: params.id },
+      body,
       {
-        runValidators: true, 
-        new: true
-      })
+        // runValidators: true,
+        new: true,
+      }
+    )
       .then((dbUserData) => {
         if (!dbUserData) {
-          return res.status(404).json({ message: 'no user with that id' });
+          return res.status(404).json({ message: 'No user with this id!' });
         }
         res.json(dbUserData);
       })
@@ -58,8 +63,8 @@ const userContoller = {
       });
   },
   // delete user
-  deleteUser({ params }, res) {
-    User.findOneAndDelete({ _id: params.userId })
+  deleteUser({params}, res) {
+    User.findOneAndDelete({ _id: params.id })
       .then((dbUserData) => {
         if (!dbUserData) {
           res.status(404).json({ message: 'no user found with this ID' });
@@ -71,7 +76,42 @@ const userContoller = {
         console.log(err);
         res.status(500).json(err);
       });
-  }
-}
+  },
+  // add friend to friend lis
+  addFriend(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
+      { new: true })
+      .then((dbUserData) => {
+        if (!dbUserData) {
+          return res.status(404).json({ message: 'No user with this id!' });
+        }
+        res.json(dbUserData);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  },
 
-module.exports = userContoller; 
+  // remove friend from friend list
+  removeFriend(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: { friends: req.params.friendId } },
+      { new: true })
+        .then((dbUserData) => {
+          if (!dbUserData) {
+            return res.status(404).json({ message: 'No user with this id!' });
+          }
+          res.json(dbUserData);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json(err);
+        });
+  },
+};
+
+module.exports = userContoller;
